@@ -1,4 +1,16 @@
 /**
+ *
+ * @param num source number
+ * @returns formatted number in thousand
+ */
+
+export const formatNumberInThousand = (num: number): string => {
+  const splittedNum = `${num}`.split(".");
+  splittedNum[0] = splittedNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return splittedNum.join(".");
+};
+
+/**
  * Remove formatted number to real number
  * @param num 1,000
  * @returns 1000

@@ -1,18 +1,35 @@
 import exp from "constants";
 import {
   abbreviateNumber,
+  formatNumberInThousand,
   formattedToNumber,
   fulfillDecimal,
   roundEpsilon,
   trimDecimalZero,
 } from "../number";
 
+describe("formatNumberInThousand", () => {
+  it.each`
+    value         | expectedValue
+    ${100}        | ${"100"}
+    ${1000}       | ${"1,000"}
+    ${1200000}    | ${"1,200,000"}
+    ${1200000.34} | ${"1,200,000.34"}
+  `(
+    "should return $expectedValue when given value is $value",
+    ({ value, expectedValue }) => {
+      expect(formatNumberInThousand(value)).toBe(expectedValue);
+    }
+  );
+});
+
 describe("formattedToNumber", () => {
   it.each`
-    value          | expectedValue
-    ${"100"}       | ${100}
-    ${"1,000"}     | ${1000}
-    ${"5,200,000"} | ${5200000}
+    value             | expectedValue
+    ${"100"}          | ${100}
+    ${"1,000"}        | ${1000}
+    ${"1,200,000"}    | ${1200000}
+    ${"1,200,000.34"} | ${1200000.34}
   `(
     "should return $expectedValue when given value is $value",
     ({ value, expectedValue }) => {
@@ -25,6 +42,7 @@ describe("trimDecimalZero", () => {
   it.each`
     value      | expectedValue
     ${"1.100"} | ${"1.1"}
+    ${"1.010"} | ${"1.01"}
   `(
     "should return $expectedValue when given value is $value",
     ({ value, expectedValue }) => {
