@@ -1,5 +1,11 @@
 import exp from "constants";
-import { abbreviateNumber, formattedToNumber } from "../number";
+import {
+  abbreviateNumber,
+  formattedToNumber,
+  fulfillDecimal,
+  roundEpsilon,
+  trimDecimalZero,
+} from "../number";
 
 describe("formattedToNumber", () => {
   it.each`
@@ -11,6 +17,30 @@ describe("formattedToNumber", () => {
     "should return $expectedValue when given value is $value",
     ({ value, expectedValue }) => {
       expect(formattedToNumber(value)).toBe(expectedValue);
+    }
+  );
+});
+
+describe("trimDecimalZero", () => {
+  it.each`
+    value      | expectedValue
+    ${"1.100"} | ${"1.1"}
+  `(
+    "should return $expectedValue when given value is $value",
+    ({ value, expectedValue }) => {
+      expect(trimDecimalZero(value)).toBe(expectedValue);
+    }
+  );
+});
+
+describe("roundEpsilon", () => {
+  it.each`
+    value          | expectedValue
+    ${10.6 + 70.1} | ${80.7}
+  `(
+    "should return $expectedValue when given value is $value",
+    ({ value, expectedValue }) => {
+      expect(roundEpsilon(value)).toBe(expectedValue);
     }
   );
 });
@@ -30,6 +60,23 @@ describe("abbreviateNumber", () => {
     "should return $expectedValue when given value is $value",
     ({ value, expectedValue }) => {
       expect(abbreviateNumber(value)).toBe(expectedValue);
+    }
+  );
+});
+
+describe("fulfillDecimal", () => {
+  it.each`
+    value        | expectedValue
+    ${"1"}       | ${"1.00"}
+    ${"1.2"}     | ${"1.20"}
+    ${"1.200"}   | ${"1.20"}
+    ${"1.23"}    | ${"1.23"}
+    ${"1.234"}   | ${"1.234"}
+    ${"1,000.2"} | ${"1,000.20"}
+  `(
+    "should return $expectedValue when given value is $value",
+    ({ value, expectedValue }) => {
+      expect(fulfillDecimal(value)).toBe(expectedValue);
     }
   );
 });
